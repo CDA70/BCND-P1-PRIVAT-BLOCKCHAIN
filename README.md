@@ -236,16 +236,16 @@ return new Promise((resolve, reject) => {
 Use 'POSTMAN'
 
 - must use a GET call to request the Genesis block
-  ![Request: http://localhost:8000/block/height/0 ](images\1-block_0_genesisblock.png)
+  ![Request: http://localhost:8000/block/height/0 ](.\images\1-block_0_genesisblock.png)
   \
 - must use a POST call to requestValidation
-  ![Request: http://localhost:8000/requestValidation ](images\2-requestValidation.png)
+  ![Request: http://localhost:8000/requestValidation ](.\images\2-requestValidation.png)
 
 - must sign message with your wallet
-  ![Use the Wallet to sign a message](images\3-signMessage.png)
+  ![Use the Wallet to sign a message](.\images\3-signMessage.png)
 
 - must submit your Star
-  ![Request: http://localhost:8000/submitstar](images\4-submitStar.png)
+  ![Request: http://localhost:8000/submitstar](.\images\4-submitStar.png)
 
 - must use GET call to retrieve starts owned by a particular address
-  ![Request: http://localhost:8000/blocks/<WALLET_ADDRESS>](images\5-getStarsByWalletAddress.png)
+  ![Request: http://localhost:8000/blocks/<WALLET_ADDRESS>](.\images\5-getStarsByWalletAddress.png)
