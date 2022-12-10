@@ -78,12 +78,20 @@ class Blockchain {
             // use SHA256 to calculate the hash
             block.hash = SHA256(JSON.stringify(block)).toString();
 
-            // push the block into the chain
-            self.chain.push(block);
+            // validate chain before adding the block to the chain
+            let errors = await self.validateChain();
 
-            // update the height
-            // self.height++;
-            resolve(block);
+            // if there no errors then push the block into the chain 
+            if (errors.length === 0) {
+                self.chain.push(block);
+                resolve(block);
+
+            } else { 
+                reject("There errors in the block chain!");
+            }
+            
+            
+            
        
         });
     }
@@ -124,14 +132,14 @@ class Blockchain {
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-            // get the time from the message
+            // get the time from the message (in seconds)
             let timeMessage = parseInt(message.split(':')[1]);
 
-            //get the currentTime
+            //get the currentTime (in seconds)
             let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
 
-            // check if the elapse time is less then 5 min (300000 msec)
-            if (timeMessage > currentTime - 300000){
+            // check if the elapse time is less then 5 min (300 sec)
+            if (timeMessage > currentTime - 300){
                 // verify the message with the wallet address and signature
                 if (bitcoinMessage.verify(message, address, signature)) {
                     // create the block and add it to the chain
@@ -170,7 +178,11 @@ class Blockchain {
     getBlockByHeight(height) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let block = self.chain.filter(p => p.height === height)[0];
+            //let block = self.chain.filter(p => p.height === height)[0];
+            // Filter returns the array based on the condition 
+            //while find simply return the object that we expect to find in an array. 
+            // we can use find because only one block is returned instead of an array.
+            let block = self.chain.find(p => p.height === height);
             if(block){
                 resolve(block);
             } else {
@@ -218,10 +230,13 @@ class Blockchain {
                     // the validation failed,
                     errorLog.push('the block is not valid, the hash might be tampered : #${block.height}');
                 } 
-
-                if (previousBlock.hash != block.previousBlockHash){
-                    errorLog.push('the block is not valid, the previous block hash is invalid : #${block.height}');
+                
+                if (block.height > 0){
+                    if (previousBlock.hash != block.previousBlockHash){
+                        errorLog.push('the block is not valid, the previous block hash is invalid : #${block.height}');
+                    }
                 }
+                
             });
             resolve(errorLog);
         });
